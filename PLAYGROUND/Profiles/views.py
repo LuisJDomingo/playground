@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 class ProfileListView(ListView):
     model = Profile
     template_name = 'Profiles/profile_list.html'
+    paginate_by= 3
     # context_object_name = 'profiles'
 
     #def get_queryset(self):
