@@ -28,4 +28,4 @@ def ensure_profile_exists(sender, instance, **kwargs):
         # Check if the profile already exists
         # If it doesn't exist, create it
         Profile.objects.get_or_create(user=instance)
-        print("se acaba de crear el perfil y su perfil enlazado")
+        #print("se acaba de crear el perfil y su perfil enlazado")

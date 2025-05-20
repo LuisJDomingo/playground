@@ -1,3 +1,36 @@
 from django.test import TestCase
-
+from django.contrib.auth.models import User
+from .models import Message, Thread
 # Create your tests here.
+
+class ThreadTestCase(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user('user1', 'password')
+        self.user2 = User.objects.create_user('user2', 'password')
+        
+        self.thread = Thread.objects.create()
+        # self.thread.users.add(self.user1, self.user2)
+
+    def test_add_user_tu_thread(self):
+        self.thread.users.add(self.user1, self.user2)
+        self.assertEqual(len(self.thread.users.all()), 2)
+
+    def test_filter_thread_by_user(self):
+        self.thread.users.add(self.user1, self.user2)
+        threads = Thread.objects.filter(users=self.user1).filter(users=self.user2)
+        self.assertEqual(threads[0], self.thread)
+
+    def test_filter_non_existent_thread(self):
+        threads = Thread.objects.filter(users=self.user1).filter(users=self.user2)
+        self.assertEqual(len(threads), 0)
+
+    def test_add_message_to_thread(self):
+        self.thread.users.add(self.user1, self.user2)
+        message1 = Message.objects.create(user=self.user1, content="Hello")
+        message2 = Message.objects.create(user=self.user1, content="adios")
+        self.thread.messages.add(message1, message2)
+        self.assertEqual(len(self.thread.messages.all()), 2)
+
+        for message in self.thread.messages.all():
+            print(message.content, message.user.username)
+        
