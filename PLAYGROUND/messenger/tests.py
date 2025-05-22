@@ -7,7 +7,7 @@ class ThreadTestCase(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user('user1', 'password')
         self.user2 = User.objects.create_user('user2', 'password')
-        
+        self.user3 = User.objects.create_user('user3', 'password')
         self.thread = Thread.objects.create()
         # self.thread.users.add(self.user1, self.user2)
 
@@ -33,4 +33,13 @@ class ThreadTestCase(TestCase):
 
         for message in self.thread.messages.all():
             print(message.content, message.user.username)
+    
+    def test_add_message_from_user_not_in_thread(self):
+        self.thread.users.add(self.user1, self.user2)
+        message1 = Message.objects.create(user=self.user1, content="Hello")
+        message2 = Message.objects.create(user=self.user1, content="adios")
+        message3 = Message.objects.create(user=self.user3, content="soy un espia")
+        self.thread.messages.add(message1, message2, message3)
+        # Check that the message from user3 is not in the thread
+        self.assertEqual(len(self.thread.messages.all()), 2)
         
