@@ -52,60 +52,16 @@
             <div class="thread" id="thread">
               {% for message in object.messages.all %}
                 <!-- Dependiendo del usuario asignamos una clase con un color de fondo u otro en el mensaje -->
-                <div {% if request.user == message.user %}class="mine mb-3"{% else %}class="other mb-3"{% endif %}>
+                <div {% if request.user = message.user %}class="mine mb-3"{% else %}class="other mb-3"{% endif %}>
                   <small><i>Hace {{thread.messages.last.created|timesince}}</i></small><br>
                   {{message.content}}
                 </div>
               {% endfor %}
             </div>
             <!-- Formulario para enviar mensajes -->
-             <textarea id="content" class="form-control mt-2" rows="2" placeholder="Escribe un mensaje..."></textarea>
+            <textarea id="content" class="form-control mt-2" rows="2" placeholder="Escribe un mensaje..."></textarea>
             <button id="send" class="btn btn-primary btn-sm btn-block mt-3" disabled>enviar</button>
-            <script>
-              var send = document.getElementById('send');
-              send.addEventListener('click', function() {
-                var content = encodeURIComponent(document.getElementById('content').value);
-                if (content.length>0) {
-                  document.getElementById('content').value = "";
-                  // Enviamos el mensaje al servidor
-                  const url = "{% url 'messenger:add' thread.pk %}"+"?content="+content;
-                fetch(url, {'credentials': 'include'})
-                  .then(response => response.json())
-                  .then(function(data) {
-                    var message = document.createElement('div');
-                    message.classList.add('mine', 'mb-3');
-                    message.innerHTML = "<small><i>hace unos segundos</i></small><br>" + decodeURIComponent(content);
-                    document.getElementById('thread').appendChild(message);
-                    ScrollBotomInThread();
-                    // Si el mensaje es el primero del hilo, actualizaremos para qaue aparezca a la izquierda
-                    if (data.first){
-                      window.location.href = "{% url 'messenger:detail' thread.pk %}";
-                    }
-                  });
-                }
-              });
 
-              send.addEventListener('click', function() {
-                // ... AJAX clásico ...
-              });
-
-              // Deshabilitamos el botón de enviar hasta que haya algo escrito en el textarea
-              var content = document.getElementById('content');
-              content.addEventListener('keyup', function() {
-                if (!this.checkValidity() || !this.value) {
-                  send.disabled = true;
-                } else {
-                  send.disabled = false;
-                }
-              });
-              //forzar scroll abajo
-              function ScrollBotomInThread(){
-                var thread = document.getElementById('thread');
-                thread.scrollTop = thread.scrollHeight;
-              }
-              ScrollBotomInThread();
-            </script>     
-            <!-- WebSocket para recibir mensajes en tiempo real -->
             <script>
               // Scroll automático al fondo del hilo
               function ScrollBotomInThread(){
