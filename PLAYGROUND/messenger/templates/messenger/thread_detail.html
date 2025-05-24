@@ -85,6 +85,10 @@
                 }
               });
 
+              send.addEventListener('click', function() {
+                // ... AJAX clásico ...
+              });
+
               // Deshabilitamos el botón de enviar hasta que haya algo escrito en el textarea
               var content = document.getElementById('content');
               content.addEventListener('keyup', function() {
@@ -101,6 +105,58 @@
               }
               ScrollBotomInThread();
             </script>     
+            <!-- WebSocket para recibir mensajes en tiempo real -->
+            <script>
+              // Scroll automático al fondo del hilo
+              function ScrollBotomInThread(){
+                var thread = document.getElementById('thread');
+                thread.scrollTop = thread.scrollHeight;
+              }
+              ScrollBotomInThread();
+
+              // WebSocket para mensajes en tiempo real
+              const threadId = "{{ thread.pk }}";
+              const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+              const chatSocket = new WebSocket(
+                ws_scheme + '://' + window.location.host + '/ws/messenger/' + threadId + '/'
+              );
+
+              chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const message = document.createElement('div');
+                message.classList.add('other', 'mb-3');
+                message.innerHTML = `<small><i>${data.user}</i></small><br>${data.message}`;
+                document.getElementById('thread').appendChild(message);
+                ScrollBotomInThread();
+              };
+
+              chatSocket.onclose = function(e) {
+                console.error('WebSocket cerrado inesperadamente');
+              };
+
+              // Enviar mensaje al presionar el botón
+              document.getElementById('send').onclick = function() {
+                const input = document.getElementById('content');
+                const message = input.value;
+                if (message.length > 0) {
+                  chatSocket.send(JSON.stringify({
+                    'message': message
+                  }));
+                  // Mostrar el mensaje propio en el hilo
+                  const myMsg = document.createElement('div');
+                  myMsg.classList.add('mine', 'mb-3');
+                  myMsg.innerHTML = `<small><i>tú</i></small><br>${message}`;
+                  document.getElementById('thread').appendChild(myMsg);
+                  input.value = '';
+                  ScrollBotomInThread();
+                }
+              };
+
+              // Habilitar el botón solo si hay texto
+              document.getElementById('content').addEventListener('input', function() {
+                document.getElementById('send').disabled = this.value.trim().length === 0;
+              });
+            </script>
           </div>
         </div>
     </div>
