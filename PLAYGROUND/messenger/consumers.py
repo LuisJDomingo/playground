@@ -49,3 +49,14 @@ class ThreadConsumer(AsyncWebsocketConsumer):
             'user': event['user'],
         }))
         print(f"[GROUP] Mensaje enviado al WebSocket del cliente")
+
+    @database_sync_to_async
+    def save_message(self, thread_id, sender_id, message):
+        thread = Thread.objects.get(id=thread_id)
+        sender = User.objects.get(id=sender_id)
+
+        # validación opcional de seguridad
+        if sender not in thread.users.all():
+            raise Exception("Usuario no pertenece a este hilo.")
+
+        Message.objects.create(thread=thread, user=sender, content=message)

@@ -4,6 +4,7 @@ from django.db.models.signals import m2m_changed
 
 # Create your models here.
 class Message(models.Model):
+    thread = models.ForeignKey('Thread', related_name='messages', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
@@ -30,11 +31,10 @@ class ThreadManager(models.Manager):
         
 class Thread(models.Model):
     users = models.ManyToManyField(User, related_name='threads')
-    messages = models.ManyToManyField(Message)
     updated = models.DateTimeField(auto_now=True)
-    
+
     objects = ThreadManager()
-    
+
     class Meta:
         ordering = ['-updated']
 
