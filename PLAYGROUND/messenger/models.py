@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import m2m_changed
+
 
 # Create your models here.
 class Message(models.Model):
@@ -60,4 +60,3 @@ def mesages_change(sender,  **kwargs):
    
 
 
-m2m_changed.connect(mesages_change, sender=Thread.messages.through)

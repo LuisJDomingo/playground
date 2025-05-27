@@ -1,5 +1,10 @@
+import django
+django.setup()
+
+
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from .models import Thread, Message
 
 class ThreadConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -50,6 +55,8 @@ class ThreadConsumer(AsyncWebsocketConsumer):
         }))
         print(f"[GROUP] Mensaje enviado al WebSocket del cliente")
 
+    from channels.db import database_sync_to_async
+    
     @database_sync_to_async
     def save_message(self, thread_id, sender_id, message):
         thread = Thread.objects.get(id=thread_id)
