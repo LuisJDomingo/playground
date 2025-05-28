@@ -59,5 +59,8 @@
 Este proyecto es una base funcional para un sistema de mensajería privada en Django, ideal para expandir y adaptar a necesidades específicas.
 
 **levantar servidor en desarrollo**
-daphne -p 8000 PLAYGROUND.asgi:application
-daphne PLAYGROUND.asgi:application
+1.- set DJANGO_SETTINGS_MODULE=PLAYGROUND.settings
+
+2.- daphne -p 8000 PLAYGROUND.asgi:application
+    o
+    daphne PLAYGROUND.asgi:application
