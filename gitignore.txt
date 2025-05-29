@@ -1,2 +1,7 @@
 pipfile
 pipifile.lock
+PLAYGROUND/media/
+
+
+# Ignorar archivos en cualquier carpeta
+**/*.sqlite3

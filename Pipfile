@@ -9,8 +9,8 @@ django-ckeditor = "*"
 pillow = "*"
 pylint = "*"
 pylint-django = "*"
-channels = "*"
 daphne = "*"
+channels = "*"
 
 [dev-packages]
 

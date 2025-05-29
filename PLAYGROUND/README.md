@@ -57,3 +57,7 @@
 
 **Nota:**  
 Este proyecto es una base funcional para un sistema de mensajería privada en Django, ideal para expandir y adaptar a necesidades específicas.
+
+
+**levantar Servidor**
+pipenv run daphne PLAYGROUND.asgi:application

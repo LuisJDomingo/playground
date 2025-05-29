@@ -83,7 +83,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'PLAYGROUND.wsgi.application'
+# WSGI_APPLICATION = 'PLAYGROUND.wsgi.application'
 
 
 # Database
@@ -158,3 +158,9 @@ else:
 # Media Files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+print("=" * 50)
+print(f"[SETTINGS] ASGI_APPLICATION = {ASGI_APPLICATION}")
+print("=" * 50)
